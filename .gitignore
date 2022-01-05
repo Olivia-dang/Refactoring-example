@@ -1,0 +1,5 @@
+# Dependency directories
+node_modules/
+
+# Ignore as yarn is used
+yarn.lock
