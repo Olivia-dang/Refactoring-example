@@ -29,23 +29,23 @@ export function statement(invoice: IInvoice, plays: IPlays) {
 }
 
 function amountFor(playType: string, numberOfAudience: number) {
-  let thisAmount = 0;
+  let result = 0;
   switch (playType) {
     case "tragedy":
-      thisAmount = 40000;
+      result = 40000;
       if (numberOfAudience > 30) {
-        thisAmount += 1000 * (numberOfAudience - 30);
+        result += 1000 * (numberOfAudience - 30);
       }
       break;
     case "comedy":
-      thisAmount = 30000;
+      result = 30000;
       if (numberOfAudience > 20) {
-        thisAmount += 10000 + 500 * (numberOfAudience - 20);
+        result += 10000 + 500 * (numberOfAudience - 20);
       }
-      thisAmount += 300 * numberOfAudience;
+      result += 300 * numberOfAudience;
       break;
     default:
       throw new Error(`unknown type: ${playType}`);
   }
-  return thisAmount;
+  return result;
 }
