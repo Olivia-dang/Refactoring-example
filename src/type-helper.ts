@@ -1,5 +1,10 @@
 export type IPlays = {
-  [playName: string]: {name: string, type: string}
+  [playName: string]: { name: string; type: string };
+};
+
+export interface IPlay {
+  name: string;
+  type: string;
 }
 
 // {
@@ -9,8 +14,13 @@ export type IPlays = {
 // }
 
 export interface IInvoice {
-  customer: string,
-  performances: Array<{playID: string, audience: number}>
+  customer: string;
+  performances: Array<IPerformance>;
+}
+
+export interface IPerformance {
+  playID: string;
+  audience: number;
 }
 
 // [
