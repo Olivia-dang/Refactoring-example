@@ -7,30 +7,12 @@ export function createStatementData(invoice: IInvoice, plays: IPlays) {
   statementData.totalAmount = totalAmount(statementData);
   statementData.totalVolumeCredits = totalVolumeCredits(statementData);
 
-  function totalAmount(data) {
-    return data.performances.reduce((acc, perf) => acc + perf.amount, 0);
-  }
-
-  function totalVolumeCredits(data) {
-    return data.performances.reduce((acc, perf) => acc + perf.volumeCredits, 0);
-  }
-
   function enrichPerformance(aPerformance: IPerformance) {
     // shallow copy object => immutable origin
     const result: any = Object.assign({}, aPerformance);
     result.play = playFor(result);
     result.amount = amountFor(result);
     result.volumeCredits = volumeCreditsFor(result);
-    return result;
-  }
-
-  function volumeCreditsFor(aPerformance: any) {
-    let result = 0;
-    // add volume credits
-    result += Math.max(aPerformance.audience - 30, 0);
-    // add extra credit for every ten comedy attendees
-    if ("comedy" === aPerformance.play.type)
-      result += Math.floor(aPerformance.audience / 5);
     return result;
   }
 
@@ -59,5 +41,24 @@ export function createStatementData(invoice: IInvoice, plays: IPlays) {
     }
     return result;
   }
+
+  function volumeCreditsFor(aPerformance: any) {
+    let result = 0;
+    // add volume credits
+    result += Math.max(aPerformance.audience - 30, 0);
+    // add extra credit for every ten comedy attendees
+    if ("comedy" === aPerformance.play.type)
+      result += Math.floor(aPerformance.audience / 5);
+    return result;
+  }
+
+  function totalAmount(data) {
+    return data.performances.reduce((acc, perf) => acc + perf.amount, 0);
+  }
+
+  function totalVolumeCredits(data) {
+    return data.performances.reduce((acc, perf) => acc + perf.volumeCredits, 0);
+  }
+  
   return statementData;
 }

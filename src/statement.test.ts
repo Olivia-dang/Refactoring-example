@@ -3,7 +3,7 @@ import plays from "../mock-data/plays.json";
 import invoices from "../mock-data/invoices.json";
 
 describe("Function Statement", () => {
-  it("Prints BigCo", () => {
+  it("Prints HTML BigCo", () => {
     expect(htmlStatement(invoices[0], plays)).toEqual(
       `<h1>Statement for ${invoices[0].customer}</h1>
 <table>
@@ -15,4 +15,8 @@ describe("Function Statement", () => {
 <p>You earned <em>47</em> credits</p>`
     );
   });
+
+  it ("prints plain text", () => {
+
+  })
 });

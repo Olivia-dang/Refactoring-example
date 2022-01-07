@@ -1,11 +1,25 @@
 import { IInvoice, IPerformance, IPlays } from "./type-helper";
 import { createStatementData } from "./create-statement-data";
 
-export function htmlStatement(invoice: IInvoice, plays: IPlays) {
-  return renderhtml(createStatementData(invoice, plays));
+function statement(invoice, plays) {
+  return renderPlainText(createStatementData(invoice, plays));
 }
 
-function renderhtml(data: any) {
+function renderPlainText(data) {
+  let result = `Statement for ${data.customer}\n`;
+  for (let perf of data.performances) {
+    result += ` ${perf.play.name}: ${toUsd(perf.amount)} (${perf.audience}`;
+  }
+  result += `Amount owed is ${toUsd(data.totalAmount)}\n`;
+  result += `You earned ${data.totalVolumeCredits} credits\n`;
+  return result;
+}
+
+export function htmlStatement(invoice: IInvoice, plays: IPlays) {
+  return renderHtml(createStatementData(invoice, plays));
+}
+
+function renderHtml(data: any) {
   let result = `<h1>Statement for ${data.customer}</h1>\n`;
   result += "<table>\n";
   result += "<tr><th>play</th><th>seats</th><th>cost</th></tr>";
@@ -18,12 +32,12 @@ function renderhtml(data: any) {
   result += `<p>You earned <em>${data.totalVolumeCredits}</em> credits</p>`;
   console.log(result);
   return result;
+}
 
-  function toUsd(aNumber: number) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format(aNumber / 100);
-  }
+function toUsd(aNumber: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(aNumber / 100);
 }
