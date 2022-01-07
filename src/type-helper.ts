@@ -1,5 +1,5 @@
 export type IPlays = {
-  [playName: string]: { name: string; type: string };
+  [playName: string]: IPlay;
 };
 
 export interface IPlay {

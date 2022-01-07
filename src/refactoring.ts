@@ -1,21 +1,30 @@
 import { IInvoice, IPerformance, IPlays } from "./type-helper";
 
 export function statement(invoice: IInvoice, plays: IPlays) {
-  const statementData: IInvoice = {
-    customer: "",
-    performances: []
-  }
-  statementData.customer = invoice.customer
-  statementData.performances = invoice.performances
+  const statementData: any = {};
+  statementData.customer = invoice.customer;
+  statementData.performances = invoice.performances.map(enrichPerformance);
   return renderPlainText(statementData, invoice, plays);
+
+  function enrichPerformance(aPerformance: IPerformance) {
+    // shallow copy object => immutable origin
+    const result: any = Object.assign({}, aPerformance);
+    result.play = playFor(result);
+    return result;
+  }
+
+  function playFor(perf: IPerformance) {
+    return plays[perf.playID];
+  }
 }
-function renderPlainText(data: IInvoice, invoice: IInvoice, plays: IPlays) {
+
+function renderPlainText(data: any, invoice: IInvoice, plays: IPlays) {
   let result = `Statement for ${data.customer}\n`;
 
   for (let perf of data.performances) {
     // print line for this order
-    result += ` ${playFor(perf).name}: ${toUsd(
-      amountFor(perf.audience, playFor(perf).type)
+    result += ` ${perf.play.name}: ${toUsd(
+      amountFor(perf.audience, perf.play.type)
     )} (${perf.audience} seats)\n`;
   }
 
@@ -26,7 +35,7 @@ function renderPlainText(data: IInvoice, invoice: IInvoice, plays: IPlays) {
   function totalAmount() {
     let result = 0;
     for (let perf of data.performances) {
-      result += amountFor(perf.audience, playFor(perf).type);
+      result += amountFor(perf.audience, perf.play.type);
     }
     return result;
   }
@@ -39,16 +48,12 @@ function renderPlainText(data: IInvoice, invoice: IInvoice, plays: IPlays) {
     return result;
   }
 
-  function playFor(perf: IPerformance) {
-    return plays[perf.playID];
-  }
-
-  function volumeCreditsFor(aPerformance: IPerformance) {
+  function volumeCreditsFor(aPerformance: any) {
     let result = 0;
     // add volume credits
     result += Math.max(aPerformance.audience - 30, 0);
     // add extra credit for every ten comedy attendees
-    if ("comedy" === playFor(aPerformance).type)
+    if ("comedy" === aPerformance.play.type)
       result += Math.floor(aPerformance.audience / 5);
     return result;
   }
@@ -82,4 +87,3 @@ function renderPlainText(data: IInvoice, invoice: IInvoice, plays: IPlays) {
     return result;
   }
 }
-
