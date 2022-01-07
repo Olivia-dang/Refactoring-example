@@ -3,7 +3,7 @@ import plays from "../mock-data/plays.json";
 import invoices from "../mock-data/invoices.json";
 
 describe("Function Statement", () => {
-  it("Prints HTML BigCo", () => {
+  it("Prints HTML", () => {
     expect(htmlStatement(invoices[0], plays)).toEqual(
       `<h1>Statement for ${invoices[0].customer}</h1>
 <table>
@@ -16,7 +16,7 @@ describe("Function Statement", () => {
     );
   });
 
-  it("Prints BigCo", () => {
+  it("Prints plain text", () => {
     expect(statement(invoices[0], plays)).toEqual(
       `Statement for BigCo
  Hamlet: $650.00 (55 seats)

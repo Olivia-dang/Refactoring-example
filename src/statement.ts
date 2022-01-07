@@ -32,7 +32,6 @@ function renderHtml(data: any) {
   result += "</table>\n";
   result += `<p>Amount owed is <em>${toUsd(data.totalAmount)}</em></p>\n`;
   result += `<p>You earned <em>${data.totalVolumeCredits}</em> credits</p>`;
-  console.log(result);
   return result;
 }
 
