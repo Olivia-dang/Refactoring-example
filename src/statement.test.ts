@@ -1,4 +1,4 @@
-import { statement } from "./refactoring";
+import { statement } from "./statement";
 import plays from "../mock-data/plays.json";
 import invoices from "../mock-data/invoices.json";
 

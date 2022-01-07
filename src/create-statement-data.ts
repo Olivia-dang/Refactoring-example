@@ -1,13 +1,11 @@
 import { IInvoice, IPerformance, IPlays } from "./type-helper";
 
-export function statement(invoice: IInvoice, plays: IPlays) {
+export function createStatementData(invoice: IInvoice, plays: IPlays) {
   const statementData: any = {};
   statementData.customer = invoice.customer;
   statementData.performances = invoice.performances.map(enrichPerformance);
   statementData.totalAmount = totalAmount(statementData);
   statementData.totalVolumeCredits = totalVolumeCredits(statementData);
-  console.log(statementData.performances);
-  return renderPlainText(statementData, invoice, plays);
 
   function totalAmount(data) {
     return data.performances.reduce((acc, perf) => acc + perf.amount, 0);
@@ -61,27 +59,5 @@ export function statement(invoice: IInvoice, plays: IPlays) {
     }
     return result;
   }
-}
-
-function renderPlainText(data: any, invoice: IInvoice, plays: IPlays) {
-  let result = `Statement for ${data.customer}\n`;
-
-  for (let perf of data.performances) {
-    // print line for this order
-    result += ` ${perf.play.name}: ${toUsd(perf.amount)} (${
-      perf.audience
-    } seats)\n`;
-  }
-
-  result += `Amount owed is ${toUsd(data.totalAmount)}\n`;
-  result += `You earned ${data.totalVolumeCredits} credits\n`;
-  return result;
-
-  function toUsd(aNumber: number) {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-    }).format(aNumber / 100);
-  }
+  return statementData;
 }
